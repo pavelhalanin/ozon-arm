@@ -1,0 +1,391 @@
+swagger: '2.0'
+info:
+  description: >-
+    Данная документация OZON API в Swagger UI не является оффициальной.
+
+    Оффициальную документацию можно найти на docs.ozon.ru:
+
+    https://docs.ozon.ru/api/seller/
+
+    Я как программист пишу свою документацию, чтобы расписать подробно, что означает каждый параметр.
+  version: 0.1.0
+  title: Документация OZON API
+  contact:
+    name: инженер-программист, Галанин П.И.
+    email: pavel.innokentevich.galanin@gmail.com
+  license:
+    name: GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
+    url: LICENSE
+host: api-seller.ozon.ru
+externalDocs:
+  description: Оффициальная документация OZON на docs.ozon.ru
+  url: https://docs.ozon.ru/api/seller/
+tags:
+  - name: act
+    description: Акт и ТТН
+    externalDocs:
+      description: Документация на docs.ozon.ru
+      url: https://docs.ozon.ru/api/seller/#operation/PostingAPI_PostingFBSGetAct
+schemes:
+  - https
+securityDefinitions:
+  ClientIdHeader:
+    type: apiKey
+    name: Client-Id
+    in: header
+    description: |
+     Можно найти у себя в кабинете продавца по ссылке:
+     
+     https://seller.ozon.ru/app/settings/api-keys?currentTab=sellerApi
+
+     в поле "Client ID"
+  ApiKeyHeader:
+    type: apiKey
+    name: Api-Key
+    in: header
+    description: |
+     Можно сгенерировать токен у себя в кабинете продавца по ссылке:
+     
+     https://seller.ozon.ru/app/settings/api-keys?currentTab=sellerApi
+     
+     нажав на кнопку "Сгенерировать ключ"
+security:
+  - ClientIdHeader: []
+  - ApiKeyHeader: []
+paths:
+  /v2/product/list:
+    post:
+      tags:
+        - act
+      summary: Тут можно получить список товаров
+      description: |
+        [Эндпоин /v2/product/list на docs.ozon.ru](https://docs.ozon.ru/api/seller/#operation/ProductAPI_GetProductList)
+
+        Получаем список номенклатуры:
+        ```json
+        {
+          "limit": 10000
+        }
+        ```
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      security:
+        - ClientIdHeader: []
+        - ApiKeyHeader: []
+      parameters:
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              filter:
+                type: object
+                properties:
+                  offer_id:
+                    type: array
+                    items:
+                      type: string
+                      example: ''
+                  product_id:
+                    type: array
+                    items:
+                      type: string
+                      example: ''
+                  visibility:
+                    type: string
+              last_id:
+                type: string
+              limit:
+                type: number
+                example: 10000
+      responses:
+        200:
+          description: |
+            .
+          schema:
+            type: object
+            properties:
+              result:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    product_id:
+                      type: number
+                    offer_id:
+                      type: string
+                    is_fbo_visible:
+                      type: boolean
+                    is_fbs_visible:
+                      type: boolean
+                    archived:
+                      type: boolean
+                    is_discounted:
+                      type: boolean
+        400:
+          description: |
+            Ошибка в JSON
+          schema:
+            $ref: '#/definitions/Ozon400'
+        401:
+          description: |
+            Не указаны Client-Id и Api-Key в заголовке
+          schema:
+            $ref: '#/definitions/Ozon401'
+  /v2/posting/fbs/act/list:
+    post:
+      tags:
+        - act
+      summary: Тут можно получить список идентификаторов за период
+      description: |
+        [Эндпоин /v2/posting/fbs/act/list на docs.ozon.ru](https://docs.ozon.ru/api/seller/#operation/PostingAPI_FbsActList)
+
+        Получаем акты (их идентификаторы) за месяц, передав в тело запроса:
+        ```json
+        {
+          "date_from": "2024-01-01",
+          "date_to": "2024-01-31",
+          "limit": 50
+        }
+        ```
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      security:
+        - ClientIdHeader: []
+        - ApiKeyHeader: []
+      parameters:
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              filter:
+                type: object
+                properties:
+                  date_from:
+                    type: string
+                    example: '2024-01-01'
+                  date_to:
+                    type: string
+                    example: '2024-01-31'
+                  integration_type:
+                    type: string
+                    example: ozon
+                  status:
+                    type: array
+                    items:
+                      type: string
+                      example: 'delivered'
+                  limit:
+                    type: number
+                    example: 50
+                    minimum: 1
+                    maximum: 50
+                    description: 'От 0 до 50'
+      responses:
+        200:
+          description: |
+            .
+          schema:
+            type: object
+            properties:
+              result:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: number
+                    delivery_method_id:
+                      type: number
+                    delivery_method_name:
+                      type: string
+                      example: 'Доставка Ozon самостоятельно, Город'
+                    integration_type:
+                      type: string
+                      example: ozon_trip
+                    containers_count:
+                      type: number
+                    status:
+                      type: string
+                      example: closed
+                    departure_date:
+                      type: string
+                      example: YYYY-MM-DD
+                    created_at:
+                      type: string
+                      example: YYYY-MM-DDThh:ii:ss.000000Z
+                    updated_at:
+                      type: string
+                      example: YYYY-MM-DDThh:ii:ss.000000Z
+                    act_type:
+                      type: string
+                      example: printed
+                    related_docs:
+                      type: object
+                      properties:
+                        act_of_acceptance:
+                          properties:
+                            document_status:
+                              type: string
+                              example: PRINTED_CARRIAGE
+                            created_at:
+                              type: string
+                              example: YYYY-MM-DDThh:ii:ssZ
+                        act_of_mismatch:
+                          properties:
+                            document_status:
+                              type: string
+                              example: PRINTED_CARRIAGE
+                            created_at:
+                              type: string
+                              example: YYYY-MM-DDThh:ii:ssZ
+                        act_of_excess:
+                          type: string
+                          description: 'null'
+                    is_partial:
+                      type: boolean
+                    has_postings_for_next_carriage:
+                      type: boolean
+                    partial_num:
+                      type: number
+        400:
+          description: |
+            Ошибка в JSON
+          schema:
+            $ref: '#/definitions/Ozon400'
+        401:
+          description: |
+            Не указаны Client-Id и Api-Key в заголовке
+          schema:
+            $ref: '#/definitions/Ozon401'
+  /v2/posting/fbs/act/check-status:
+    post:
+      tags:
+        - act
+      summary: Тут можно получить список номеров заказа в акте
+      description: |
+        <p><a target="_blank" href="https://docs.ozon.ru/api/seller/#operation/PostingAPI_PostingFBSActCheckStatus">Эндпоин /v2/posting/fbs/act/check-status на docs.ozon.ru</a></p>
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      security:
+        - ClientIdHeader: []
+        - ApiKeyHeader: []
+      parameters:
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              id:
+                type: number
+                example: 52702769
+      responses:
+        200:
+          description: |
+            .
+          schema:
+            type: object
+            properties:
+              result:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'ready'
+                  added_to_act:
+                    type: array
+                    items:
+                      type: string
+                      example: 00000000-0000-0
+                  removed_from_act:
+                    type: array
+                    items:
+                      type: string
+                  act_type:
+                    type: string
+                    example: 'printed'
+                  is_partial:
+                    type: boolean
+                  has_postings_for_next_carriage:
+                    type: boolean
+                  partial_num:
+                    type: number
+        401:
+          description: |
+            Не указаны Client-Id и Api-Key в заголовке
+          schema:
+            $ref: '#/definitions/Ozon401'
+  /v2/posting/fbs/act/get-pdf:
+    post:
+      tags:
+        - act
+      summary: Получаем PDF акта и товарно-транспортной накладной
+      description: |
+        [Эндпоин /v2/posting/fbs/act/get-pdf на docs.ozon.ru](https://docs.ozon.ru/api/seller/#operation/PostingAPI_PostingFBSGetAct)
+      consumes:
+        - application/json
+      produces:
+        - application/pdf
+        - application/json
+      security:
+        - ClientIdHeader: []
+        - ApiKeyHeader: []
+      parameters:
+        # - name: Client-Id
+        #   in: header
+        #   type: string
+        #   required: true
+        # - name: Api-Key
+        #   in: header
+        #   type: string
+        #   required: true
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              id:
+                type: number
+                example: 52702769
+      responses:
+        200:
+          description: |
+            <p>Получаем PDF</p>
+            <p>(!!! TODO: Пока еще не нашел как сделать кнопку скачать в Swagger !!!)</p>
+        401:
+          description: |
+            Не указаны Client-Id и Api-Key в заголовке
+          schema:
+            $ref: '#definitions/Ozon401'
+definitions:
+  Ozon400:
+    description: |
+      Ошибка в JSON
+    type: object
+    properties:
+      code:
+        type: number
+      message:
+        type: string
+      details:
+        type: array
+        items:
+          type: string
+          example: 'TODO. Не знаю какой здесь тип у элемента массива. Указать'
+  Ozon401:
+    description: |
+      Не указаны Client-Id и Api-Key в заголовке
+    type: object
+    properties:
+      code:
+        type: number
+      message:
+        type: string
