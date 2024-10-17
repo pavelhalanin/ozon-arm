@@ -1,15 +1,28 @@
 <?php
 $HOME = $_SERVER['DOCUMENT_ROOT'];
 include_once "$HOME/config/env.php";
+include_once "$HOME/_class/OzonSeller__ProductList.class.php";
 
-class OzonItemHelper {
-    function __construct() {
-
+class OzonSeller__ProductInfo {
+    public function fetchJson__getAllProducts() {
+        $productList = (new OzonSeller__ProductList())->fetchJson__getAllProducts();
+        $arr = [];
+        foreach($productList as $element) {
+            $offer_id = $element['offer_id'];
+            $arr []= $this->fetchJson__getByOfferId($offer_id);
+        }
+        return $arr;
     }
 
-    function fetch($HTTP_DATA) {
+    public function fetchJson__getByOfferId($offer_id) {
+        return $this->fetchJson([
+            'offer_id' => $offer_id,
+        ]);
+    }
+
+    public function fetchJson($HTTP_DATA) {
         global $env;
-        $URI = "/v2/product/list";
+        $URI = "/v2/product/info";
         $FETCH_URL = "https://api-seller.ozon.ru$URI";
 
         $jsonData = json_encode($HTTP_DATA);
@@ -52,7 +65,7 @@ class OzonItemHelper {
             // Закрываем cURL сессию
             curl_close($ch);
             $jsonString = $response;
-            $phpObject = json_decode($jsonString);
+            $phpObject = json_decode($jsonString, true);
             return $phpObject;
         }
     }
