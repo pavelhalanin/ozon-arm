@@ -56,7 +56,7 @@ paths:
   /v2/product/list:
     post:
       tags:
-        - act
+        - product
       summary: Тут можно получить список товаров
       description: |
         [Эндпоин /v2/product/list на docs.ozon.ru](https://docs.ozon.ru/api/seller/#operation/ProductAPI_GetProductList)
@@ -145,8 +145,10 @@ paths:
         Получаем акты (их идентификаторы) за месяц, передав в тело запроса:
         ```json
         {
-          "date_from": "2024-01-01",
-          "date_to": "2024-01-31",
+          "filter": {
+            "date_from": "2024-01-01",
+            "date_to": "2024-01-31",
+          },
           "limit": 50
         }
         ```
@@ -180,12 +182,12 @@ paths:
                     items:
                       type: string
                       example: 'delivered'
-                  limit:
-                    type: number
-                    example: 50
-                    minimum: 1
-                    maximum: 50
-                    description: 'От 0 до 50'
+              limit:
+                type: number
+                example: 50
+                minimum: 1
+                maximum: 50
+                description: 'От 0 до 50'
       responses:
         200:
           description: |
