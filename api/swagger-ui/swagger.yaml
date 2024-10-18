@@ -134,6 +134,243 @@ paths:
             Не указаны Client-Id и Api-Key в заголовке
           schema:
             $ref: '#/definitions/Ozon401'
+  /v2/product/info:
+    post:
+      tags:
+        - product
+      summary: Тут можно получить данные о товаре
+      description: |
+        [Эндпоин /v2/product/info на docs.ozon.ru](https://docs.ozon.ru/api/seller/#operation/ProductAPI_GetProductInfoV2)
+
+        Получаем список номенклатуры:
+        ```json
+        {
+          "offer_id": '91101(белый)'
+        }
+        ```
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      security:
+        - ClientIdHeader: []
+        - ApiKeyHeader: []
+      parameters:
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              offer_id:
+                type: string
+                example: 91101(белый)
+      responses:
+        200:
+          description: |
+            .
+          schema:
+            type: object
+            properties:
+              result:
+                type: object
+                properties:
+                  id: 
+                    type: number
+                  name:
+                    type: string
+                  offer_id:
+                    type: string
+                  barcode:
+                    type: string
+                  buybox_price:
+                    type: string
+                  category_id:
+                    type: number
+                  created_at:
+                    type: string
+                  images:
+                    type: array
+                    items:
+                      type: string
+                  marketing_price:
+                    type: string
+                  min_ozon_price:
+                    type: string
+                  old_price:
+                    type: string
+                  premium_price:
+                    type: string
+                  price:
+                    type: string
+                  recommended_price:
+                    type: string
+                  min_price:
+                    type: string
+                  sources:
+                    type: array
+                  stocks: 
+                    type: object
+                    properties:
+                      coming:
+                        type: number
+                      present:
+                        type: number
+                      reserved:
+                        type: number
+                  errors:
+                    type: array
+                  vat:
+                    type: string
+                  visible:
+                    type: boolean
+                  visibility_details:
+                    type: object
+                    properties:
+                      has_price:
+                        type: boolean
+                      has_stock:
+                        type: boolean
+                      active_product:
+                        type: boolean
+                  price_index:
+                    type: string
+                  commissions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        percent:
+                          type: number
+                        min_value:
+                          type: number
+                        value:
+                          type: number
+                        sale_schema:
+                          type: string
+                        delivery_amount:
+                          type: number
+                        return_amount:
+                          type: number
+                  volume_weight:
+                    type: number
+                  is_prepayment:
+                    type: boolean
+                  is_prepayment_allowed:
+                    type: boolean
+                  images360:
+                    type: array
+                  color_image:
+                    type: string
+                  primary_image:
+                    type: string
+                  status:
+                    type: object
+                    properties:
+                      state:
+                        type: string
+                      state_failed:
+                        type: string
+                      moderate_status:
+                        type: string
+                      decline_reasons:
+                        type: array
+                      validation_state:
+                        type: string
+                      state_name:
+                        type: string
+                      state_description:
+                        type: string
+                      is_failed:
+                        type: boolean
+                      is_created:
+                        type: boolean
+                      state_tooltip:
+                        type: string
+                      item_errors:
+                        type: array
+                      state_updated_at:
+                        type: string
+                  state:
+                    type: string
+                  service_type:
+                    type: string
+                  fbo_sku:
+                    type: number
+                  fbs_sku:
+                    type: number
+                  currency_code:
+                    type: string
+                  is_kgt:
+                    type: boolean
+                  discounted_stocks:
+                    type: object
+                    properties:
+                      coming:
+                        type: number
+                      present:
+                        type: number
+                      reserved:
+                        type: number
+                  is_discounted:
+                    type: boolean
+                  has_discounted_item:
+                    type: boolean
+                  barcodes:
+                    type: array
+                  updated_at:
+                    type: string
+                  price_indexes:
+                    type: object
+                    properties:
+                      price_index:
+                        type: string
+                      external_index_data:
+                        type: object
+                        properties:
+                          minimal_price:
+                            type: string
+                          minimal_price_currency:
+                            type: string
+                          price_index_value:
+                            type: number
+                      ozon_index_data:
+                        type: object
+                        properties:
+                          minimal_price:
+                            type: string
+                          minimal_price_currency:
+                            type: string
+                          price_index_value:
+                            type: number
+                      self_marketplaces_index_data:
+                        type: object
+                        properties:
+                          minimal_price:
+                            type: string
+                          minimal_price_currency:
+                            type: string
+                          price_index_value:
+                            type: number
+                  sku:
+                    type: number
+                  description_category_id:
+                    type: number
+                  type_id:
+                    type: number
+                  is_archived:
+                    type: boolean
+                  is_autoarchived:
+                      type: boolean
+        400:
+          description: |
+            Ошибка в JSON
+          schema:
+            $ref: '#/definitions/Ozon400'
+        401:
+          description: |
+            Не указаны Client-Id и Api-Key в заголовке
+          schema:
+            $ref: '#/definitions/Ozon401'
   /v2/posting/fbs/act/list:
     post:
       tags:
