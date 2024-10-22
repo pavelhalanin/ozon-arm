@@ -4,8 +4,20 @@ include_once "$HOME/_class/Logger.class.php";
 include_once "$HOME/_class/OzonSeller__FinanceTransactionList.class.php";
 
 class OzonSellerSqlite__FinanceTransactionList {
-    public function getArray() {
+    public function fetch__getArray() {
         return (new OzonSeller__FinanceTransactionList())->getAll();
+    }
+
+    private function getDatabaseConnect() {
+        $HOME = $_SERVER['DOCUMENT_ROOT'];
+
+        $logger = new Logger();
+        $logger->log(message: "Подкоючение к sqlite");
+
+        $pdo = new PDO("sqlite:$HOME/database/database.sqlite");
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        return $pdo;
     }
 
     function saveToDatabase() {
@@ -19,7 +31,7 @@ class OzonSellerSqlite__FinanceTransactionList {
 
             echo "<p style='color: green;'>Успешное подключение к SQLite</p>";
 
-            $products = $this->getArray();
+            $products = $this->fetch__getArray();
 
             $sql = "DROP TABLE IF EXISTS DOC_OzonSellerFinanceTransactionList";
             $logger->log("$sql");
@@ -115,5 +127,21 @@ class OzonSellerSqlite__FinanceTransactionList {
             echo "<p style='color: red;'>$exception</p>";
             $logger->log("$exception");
         }
+    }
+
+    public function getAll() {
+        $pdo = $this->getDatabaseConnect();
+
+        $sql = "SELECT
+                    *
+                FROM
+                    DOC_OzonSellerFinanceTransactionList
+                ";
+
+        $smth = $pdo->prepare($sql); 
+        $smth->execute();
+        $result = $smth->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result;
     }
 }

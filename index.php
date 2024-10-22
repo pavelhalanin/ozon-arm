@@ -12,6 +12,7 @@ include "$HOME/_includes/head.php";
     </div>
     <div class="mt-2 mb-2">
         <a class="btn btn-primary" href="/api/">API</a>
+        <a class="btn btn-primary" href="/reports/">Отчеты</a>
         <a class="btn btn-primary" href="/catalogs/">Каталоги</a>
         <a class="btn btn-primary" href="/update-database/">Обновление БД</a>
     </div>
