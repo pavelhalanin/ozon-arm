@@ -384,7 +384,7 @@ paths:
         {
           "filter": {
             "date_from": "2024-01-01",
-            "date_to": "2024-01-31",
+            "date_to": "2024-01-31"
           },
           "limit": 50
         }
