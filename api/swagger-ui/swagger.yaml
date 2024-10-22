@@ -604,6 +604,163 @@ paths:
             Не указаны Client-Id и Api-Key в заголовке
           schema:
             $ref: '#definitions/Ozon401'
+  /v3/finance/transaction/list:
+    post:
+      tags:
+        - finance
+      summary: Получаем транзакции начислений
+      description: |
+        [Эндпоин /v3/finance/transaction/list на docs.ozon.ru](https://docs.ozon.ru/api/seller/#operation/FinanceAPI_FinanceTransactionListV3)
+      consumes:
+        - application/json
+      produces:
+        - application/pdf
+        - application/json
+      security:
+        - ClientIdHeader: []
+        - ApiKeyHeader: []
+      parameters:
+        # - name: Client-Id
+        #   in: header
+        #   type: string
+        #   required: true
+        # - name: Api-Key
+        #   in: header
+        #   type: string
+        #   required: true
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              filter:
+                type: object
+                properties: 
+                  date:
+                    type: object
+                    properties: 
+                      from:
+                        type: string
+                        example: "2024-01-01T00:00:00.000Z"
+                      to:
+                        type: string
+                        example: "2024-01-31T23:59:59.999Z"
+                  operation_type:
+                    type: array
+                  posting_number:
+                    type: string
+                    example: ""
+                  transaction_type:
+                    type: string
+                    example: "all"
+              page:
+                type: number
+                example: 1
+              page_size:
+                type: number
+                example: 1000
+      responses:
+        200:
+          description: |
+            <p>Получаем список транзакций</p>
+          schema:
+            type: object
+            properties:
+              result:
+                type: object
+                properties:
+                  operations:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        operation_id:
+                          type: number
+                          description: Номер операции
+                        operation_type:
+                          type: string
+                          description: |
+                            - MarketplaceRedistributionOfAcquiringOperation
+                            - OperationAgentDeliveredToCustomer
+                            - ClientReturnAgentOperation
+                        operation_date:
+                          type: string
+                        operation_type_name:
+                          type: string
+                          description: |
+                           - Оплата эквайринга
+                           - Доставка покупателю
+                           - Получение возврата, отмены, невыкупа от покупателя
+                        delivery_charge:
+                          type: number
+                        return_delivery_charge:
+                          type: number
+                        accruals_for_sale:
+                          type: number
+                        sale_commission:
+                          type: number
+                          description: Коммиссия
+                        amount:
+                          type: number
+                          description: Итого
+                        type:
+                          type: string
+                          description: |
+                            - orders
+                            - other
+                        posting:
+                          type: object
+                          properties: 
+                            delivery_schema:
+                              type: string
+                            order_date: 
+                              type: string
+                              example: "2024-01-01 00:00:00"
+                            posting_number:
+                              type: string
+                              description: |
+                                Номер заказа
+                                - первое число - идентификатор пользователя
+                                - второе число - количество заказов, которое сделал пользователь
+                                - третье число - количество заказов в текущий день
+                                Пример 00000000-0001-1",
+                            warehouse_id:
+                              type: number
+                              description: Номер склада
+                        items:
+                          type: array
+                          items:
+                            type: object
+                            properties: 
+                              name:
+                                type: string
+                              sku:
+                                type: number
+                        services:
+                          type: array
+                          items: 
+                            type: object
+                            properties: 
+                              name: 
+                                type: string
+                                description: |
+                                  - MarketplaceRedistributionOfAcquiringOperation - Эквайринг
+                                  - MarketplaceServiceItemDropoffPVZ - Обработка отправления (Drop-off/Pick-up)
+                                  - MarketplaceServiceItemDirectFlowTrans
+                                  - MarketplaceServiceItemDelivToCustomer - Последняя миля
+                                  - MarketplaceServiceItemDirectFlowLogistic - Логистика
+                                  - MarketplaceServiceItemReturnAfterDelivToCustomer
+                                  - MarketplaceServiceItemReturnFlowTrans
+                                  - MarketplaceServiceItemReturnFlowLogistic - Обратная логистика
+                                  - MarketplaceServiceItemRedistributionReturnsPVZ - Обработка возврата
+                              price:
+                                type: number
+        401:
+          description: |
+            Не указаны Client-Id и Api-Key в заголовке
+          schema:
+            $ref: '#definitions/Ozon401'
 definitions:
   Ozon400:
     description: |
