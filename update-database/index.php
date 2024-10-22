@@ -14,5 +14,6 @@ include "$HOME/_includes/head.php";
         <a class="btn btn-primary" href="/update-database/CTL_OzonSellerProductList/">CTL_OzonSellerProductList</a>
         <a class="btn btn-primary" href="/update-database/CTL_OzonSellerProductInfo/">CTL_OzonSellerProductInfo</a>
         <a class="btn btn-primary" href="/update-database/DOC_OzonSellerFinanceTransactionList/">DOC_OzonSellerFinanceTransactionList</a>
+        <a class="btn btn-primary" href="/update-database/DOC_OzonSellerPostingFbsActList/">DOC_OzonSellerPostingFbsActList</a>
     </div>
 </div>
