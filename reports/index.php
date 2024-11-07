@@ -11,6 +11,8 @@ include "$HOME/_includes/head.php";
         <a class="btn btn-success" href="/">Назад</a>
     </div>
     <div class="mt-2 mb-2">
+        <a class="btn btn-primary" href="/reports/posting-date/">Даты заказов</a>
+        <a class="btn btn-primary" href="/reports/posting-users/">Количество заказов по каждому покупателю</a>
         <a class="btn btn-primary" href="/reports/prihod-rashod/">Приход-расход</a>
         <a class="btn btn-primary" href="/reports/ttn/">ТТН</a>
     </div>
